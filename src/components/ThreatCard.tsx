@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import React, { type FC } from 'react';
+import { Link } from 'react-router-dom';
 import { Threat } from '../hooks/useThreats';
 
 interface ThreatCardProps {
@@ -36,12 +37,9 @@ const ThreatCard: FC<ThreatCardProps> = ({ threat }) => {
         <small className="text-sm">
           Severity: <strong>{threat.severity_level}</strong>, Confidence: <strong>{threat.confidence_pct}%</strong>
         </small>
-        <a
-          href={`/threat/${encodeURIComponent(threat.guid)}`}
-          className="text-blue-600 hover:underline"
-        >
-          Read more
-        </a>
+            <Link to={`/threat/${encodeURIComponent(threat.guid)}`}>
+     Read more
+   </Link>
       </footer>
     </article>
   );
