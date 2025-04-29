@@ -1,31 +1,56 @@
-// src/pages/ThreatDetail.jsx
+import { FC } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useThreats } from '../hooks/useThreats';
-import SeverityBadge from '../components/SeverityBadge';
+import { useThreats, Threat } from '../hooks/useThreats';
 
-export default function ThreatDetail() {
-  const { guid } = useParams();
-  const { threats } = useThreats();
-  const threat = threats.find(t => t.guid === decodeURIComponent(guid));
-  if (!threat) return <p>Not found.</p>;
+const ThreatDetail: FC = () => {
+  const { guid } = useParams<{ guid: string }>();
+  const { threats, isLoading, isError } = useThreats();
+
+  if (isLoading) return <p>Loading threat…</p>;
+  if (isError) return <p>Unable to load threats.</p>;
+
+  const threat = threats.find(t => t.guid === decodeURIComponent(guid ?? ''));
+  if (!threat) return <p>Threat not found.</p>;
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow">
-      <Link to="/" className="text-indigo-600 hover:underline">&larr; Back</Link>
-      <h1 className="text-2xl font-bold mt-2">{threat.title}</h1>
-      <SeverityBadge level={threat.severity_level} />
-      <p className="text-sm text-gray-500 mt-1">Published: {new Date(threat.published).toLocaleString()}</p>
-      <div className="mt-4 prose prose-indigo">
-        <h2>Summary Impact</h2>
-        <p>{threat.summary_impact}</p>
-        <h2>Historical Context</h2>
-        <p>{threat.historical_context}</p>
-        <h2>Recommendations</h2>
-        <ul>{threat.recommended_actions.map(a => <li key={a}>{a}</li>)}</ul>
-        {threat.cve_references.length > 0 && (
-          <> <h2>CVEs</h2> <ul>{threat.cve_references.map(c => <li key={c}>{c}</li>)}</ul> </>
-        )}
-      </div>
-    </div>
+    <section className="prose mx-auto py-8">
+      <h1>{threat.title}</h1>
+      <p><em>Published:</em> {new Date(threat.published).toLocaleString()}</p>
+      <p>{threat.content}</p>
+
+      <h2>Impact & Context</h2>
+      <p>{threat.summary_impact}</p>
+      <p><strong>Historical Context:</strong> {threat.historical_context}</p>
+
+      <h2>Indicators of Compromise</h2>
+      <ul>
+        {threat.key_iocs.map(ioc => <li key={ioc}>{ioc}</li>)}
+      </ul>
+
+      <h2>Recommended Actions</h2>
+      <ul>
+        {threat.recommended_actions.map((act, idx) => <li key={idx}>{act}</li>)}
+      </ul>
+
+      <h2>Mitigation Strategies</h2>
+      <ul>
+        {threat.mitigation_strategies.map((m, i) => <li key={i}>{m}</li>)}
+      </ul>
+
+      <h2>Other Details</h2>
+      <p><strong>Confidence:</strong> {threat.confidence_pct}%</p>
+      <p><strong>Relevance:</strong> {threat.relevance}</p>
+      <p><strong>Additional Notes:</strong> {threat.additional_notes}</p>
+      <p><strong>Potential Threat Actors:</strong> {threat.potential_threat_actors.join(', ')}</p>
+      {threat.cve_references.length > 0 && (
+        <p><strong>CVE References:</strong> {threat.cve_references.join(', ')}</p>
+      )}
+
+      <p className="mt-8">
+        <Link to="/" className="text-blue-600 hover:underline">← Back to list</Link>
+      </p>
+    </section>
   );
-}
+};
+
+export default ThreatDetail;

@@ -1,15 +1,50 @@
-// src/components/ThreatCard.jsx
-import { Link } from 'react-router-dom';
-import SeverityBadge from './SeverityBadge';
-export default function ThreatCard({ threat }) {
-  return (
-    <Link to={`/threat/${encodeURIComponent(threat.guid)}`} className="block bg-white shadow rounded-lg p-4 hover:shadow-lg transition">
-      <div className="flex justify-between items-start">
-        <h2 className="font-semibold text-lg">{threat.title}</h2>
-        <SeverityBadge level={threat.severity_level} />
-      </div>
-      <p className="text-sm text-gray-600 mt-2 truncate">{threat.summary_impact}</p>
-      <div className="text-xs text-gray-500 mt-2">Published: {new Date(threat.published).toLocaleString()}</div>
-    </Link>
-  );
+import { FC } from 'react';
+import { Threat } from '../hooks/useThreats';
+
+interface ThreatCardProps {
+  threat: Threat;
 }
+
+const ThreatCard: FC<ThreatCardProps> = ({ threat }) => {
+  return (
+    <article className="bg-white p-6 rounded-lg shadow-md space-y-4">
+      <header className="flex justify-between items-start">
+        <h2 className="text-xl font-semibold">
+          <a href={threat.link} target="_blank" rel="noopener noreferrer">
+            {threat.title}
+          </a>
+        </h2>
+        <span className="text-sm text-gray-500">
+          {new Date(threat.published).toLocaleDateString()}
+        </span>
+      </header>
+
+      <p className="text-gray-700 truncate-3-lines">{threat.summary_impact}</p>
+
+      <div className="flex flex-wrap gap-2">
+        {threat.key_iocs.map(ioc => (
+          <span
+            key={ioc}
+            className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full"
+          >
+            {ioc}
+          </span>
+        ))}
+      </div>
+
+      <footer className="flex justify-between items-center">
+        <small className="text-sm">
+          Severity: <strong>{threat.severity_level}</strong>, Confidence: <strong>{threat.confidence_pct}%</strong>
+        </small>
+        <a
+          href={`/threat/${encodeURIComponent(threat.guid)}`}
+          className="text-blue-600 hover:underline"
+        >
+          Read more
+        </a>
+      </footer>
+    </article>
+  );
+};
+
+export default ThreatCard;
