@@ -91,7 +91,7 @@ const Dashboard: FC = () => {
 
   return (
     <div className="p-6 space-y-8">
-      <h1 className="text-2xl font-bold">OSINT Threat Dashboard</h1>
+     
 
       {/* Date-range buttons */}
       <div className="flex space-x-2">
