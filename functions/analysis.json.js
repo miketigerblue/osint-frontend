@@ -1,24 +1,28 @@
 // functions/analysis.json.js
-export async function onRequest(context) {
-    const { env, request } = context;
-    const url = `https://api.cloudflare.com/client/v4/accounts/${env.CF_ACCOUNT_ID}` +
+
+export async function onRequest({ env }) {
+    // Build the Cloudflare API URL for your R2 object
+    const url = `https://api.cloudflare.com/client/v4/accounts/` +
+                `${env.CF_ACCOUNT_ID}` +
                 `/r2/buckets/osint/objects/analysis.json`;
   
-    // Fetch directly from R2 with your read-only token
+    // Fetch using your read-only User Token
     const r2resp = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${env.SECRET_R2_TOKEN}`
+        Authorization: `Bearer ${env.R2_USER_TOKEN}`,
+        Accept:        'application/json'
       }
     });
+  
     if (!r2resp.ok) {
-      return new Response(await r2resp.text(), { status: r2resp.status });
+      const text = await r2resp.text();
+      return new Response(text, { status: r2resp.status });
     }
   
-    // Stream the JSON back to the browser
-    const body = await r2resp.text();
-    return new Response(body, {
+    // Stream the JSON back
+    return new Response(r2resp.body, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type':  'application/json',
         'Cache-Control': 'public, max-age=0, s-maxage=60, stale-while-revalidate=30'
       }
     });

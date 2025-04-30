@@ -1,9 +1,12 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [react({ include: ['**/*.jsx', '**/*.tsx'] })],
+  plugins: [
+    react({
+      include: ['**/*.jsx', '**/*.tsx']
+    })
+  ],
   resolve: {
     alias: { '@': '/src' },
     extensions: ['.js', '.jsx', '.ts', '.tsx']
@@ -11,11 +14,11 @@ export default defineConfig({
   server: {
     port: 3005,
     proxy: {
-      '/mv_threat_frontend': {
+      // In dev, any fetch('/analysis.json') is forwarded to your Pages Function
+      '/analysis.json': {
         target: 'https://tigerblue.app',
         changeOrigin: true,
-        secure: true,
-        rewrite: () => '/analysis.json'   
+        secure: true
       }
     }
   }
