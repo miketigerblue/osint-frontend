@@ -1,3 +1,4 @@
+// src/hooks/useThreats.ts
 import useSWR from 'swr';
 
 export interface Threat {
@@ -23,22 +24,37 @@ export interface Threat {
   cve_references: string[];
 }
 
-const fetcher = (url: string) =>
-  fetch(url)
-    .then(res => {
-      if (!res.ok) throw new Error('Network response was not ok');
-      return res.json();
-    })
-    .then((data: Threat[]) => data);
+/** Generic JSON fetcher for SWR */
+const fetcher = async (url: string): Promise<Threat[]> => {
+  const res = await fetch(url, { credentials: 'omit' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+};
 
+/**
+ * Hook returning the threats array.
+ * - Hits `/analysis.json` in both dev & prod
+ * - Refreshes every 15 minutes
+ * - Re-fetches on window focus
+ * - Dedupes identical calls for 60 s
+ */
 export function useThreats() {
-  const { data, error } = useSWR<Threat[]>('/mv_threat_frontend', fetcher, {
-    refreshInterval: 900_000, // 15 minutes
-  });
+  const feedUrl = '/analysis.json';
+
+  const { data, error, isValidating } = useSWR<Threat[]>(
+    feedUrl,
+    fetcher,
+    {
+      refreshInterval: 900_000,   // 15 minutes
+      revalidateOnFocus: true,    // refetch when tab regains focus
+      dedupingInterval: 60_000    // no duplicate calls within 60 s
+    }
+  );
 
   return {
-    threats: data ?? [],
-    isLoading: !error && !data,
-    isError: Boolean(error),
+    threats:      data ?? [],
+    isLoading:    !data && !error,
+    isError:      Boolean(error),
+    isRefreshing: isValidating
   };
 }
