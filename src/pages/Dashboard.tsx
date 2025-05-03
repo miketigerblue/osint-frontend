@@ -271,7 +271,9 @@ const recentCritical = useMemo(
             <tbody>
               {recentCritical.map(r => (
                 <tr key={r.guid}>
-                  <td className="py-1">{r.analysis_date.split('T')[0]}</td>
+                  <td className="py-1">
+                  {r.analysed_at ? r.analysed_at.split('T')[0] : '—'}
+                  </td>
                   <td className="py-1 truncate">{r.guid}</td>
                   <td className="py-1 text-center">{Math.round(r.confidence * 100)}%</td>
                 </tr>
