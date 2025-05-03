@@ -1,24 +1,16 @@
-// wrangler.jsonc
 {
-    // Your Pages project name (must match what you set up in dash)
     "name": "osint-frontend",
-  
-    // Tell Pages where your Vite build lands
     "pages_build_output_dir": "dist",
-  
-    // Pin your runtime for the Functions that live under ./functions
     "compatibility_date": "2025-05-03",
     "compatibility_flags": ["nodejs_compat"],
-  
-    // Bind your R2 bucket so your Functions can do `env.OSINT_BUCKET.get(...)`
+
     "r2_buckets": [
       {
         "binding": "OSINT_BUCKET",
         "bucket_name": "osint"
       }
     ],
-  
-    // Point at your Functions folder; Pages will pick up any .ts/.js in there
+ 
     "functions": {
       "directory": "functions"
     }
