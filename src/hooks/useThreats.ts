@@ -39,7 +39,7 @@ const fetcher = async (url: string): Promise<Threat[]> => {
  * - Dedupes identical calls for 60 s
  */
 export function useThreats() {
-  const feedUrl = '/api/analysis.json';
+  const feedUrl = '/api/analysis';
 
   const { data, error, isValidating } = useSWR<Threat[]>(
     feedUrl,
