@@ -10,7 +10,9 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  Area
+  Area,
+  BarChart,
+  Bar
 } from 'recharts';
 
 // Import the metrics functions to use in the component
