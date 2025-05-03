@@ -62,8 +62,8 @@ export function getTopActions(data: AnalysisEntry[], topN = 10) {
  *    Group entries by YYYY-MM-DD (analysis_date), return [{ date, count }]
  */
 export function getDailyTimeline(data: AnalysisEntry[]) {
-  const counts = data.reduce<Record<string, number>>((acc, e) => {
-    const day = e.analysis_date.slice(0, 10)  // "2025-04-27"
+    const counts = data.reduce<Record<string, number>>((acc, e) => {
+    const day = e.analysed_at.slice(0, 10)    
     acc[day] = (acc[day] || 0) + 1
     return acc
   }, {})
@@ -91,10 +91,10 @@ export function getRecentCritical(data: AnalysisEntry[], days = 7) {
 
   return data
     .filter(e =>
-      e.severity_level === 'CRITICAL' &&
-      new Date(e.analysis_date).getTime() >= cutoff
+        e.severity_level === 'CRITICAL' &&
+        new Date(e.analysed_at).getTime() >= cutoff
     )
     .sort((a, b) =>
-      new Date(b.analysis_date).getTime() - new Date(a.analysis_date).getTime()
+        new Date(b.analysed_at).getTime() - new Date(a.analysed_at).getTime()
     )
 }
