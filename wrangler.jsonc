@@ -1,0 +1,21 @@
+// wrangler.jsonc
+{
+    "name": "osint-frontend",
+    "main": "src/index.ts",
+    "compatibility_date": "2025-05-03",
+    "compatibility_flags": ["nodejs_compat"],
+    "observability": {
+      "enabled": true,
+      "head_sampling_rate": 1
+    },
+    "r2_buckets": [
+      {
+        "binding": "OSINT_BUCKET",
+        "bucket_name": "osint"
+      }
+    ],
+    "functions": {
+      "directory": "functions"
+    }
+  }
+  
