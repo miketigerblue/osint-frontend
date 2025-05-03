@@ -1,4 +1,3 @@
-// functions/api/analysis.ts
 import type { PagesFunction } from '@cloudflare/workers-types'
 
 interface Env {
