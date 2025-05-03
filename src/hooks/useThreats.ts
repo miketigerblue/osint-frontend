@@ -33,13 +33,13 @@ const fetcher = async (url: string): Promise<Threat[]> => {
 
 /**
  * Hook returning the threats array.
- * - Hits `/analysis.json` in both dev & prod
+ * - Hits `/api/analysis.json` in both dev & prod
  * - Refreshes every 15 minutes
  * - Re-fetches on window focus
  * - Dedupes identical calls for 60 s
  */
 export function useThreats() {
-  const feedUrl = '/analysis.json';
+  const feedUrl = '/api/analysis.json';
 
   const { data, error, isValidating } = useSWR<Threat[]>(
     feedUrl,

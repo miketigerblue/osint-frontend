@@ -14,11 +14,11 @@ export default defineConfig({
   server: {
     port: 3005,
     proxy: {
-      // In dev, any fetch('/analysis.json') is forwarded to your Pages Function
-      '/analysis.json': {
-        target: 'https://tigerblue.app/',
+      // Any request to /api/analysis in Dev is forwarded to your Pages Function
+      '/api/analysis': {
+        target: 'http://localhost:8787',
         changeOrigin: true,
-        secure: true
+        secure: false,
       }
     }
   }
