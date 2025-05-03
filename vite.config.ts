@@ -16,7 +16,7 @@ export default defineConfig({
     proxy: {
       // In dev, any fetch('/analysis.json') is forwarded to your Pages Function
       '/analysis.json': {
-        target: 'https://tigerblue.app',
+        target: 'https://tigerblue.app/',
         changeOrigin: true,
         secure: true
       }

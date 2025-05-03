@@ -20,7 +20,11 @@ const RANGE_OPTIONS = [
   { label: '24 hrs',  key: '24h', ms: 1000 * 60 * 60 * 24 },
   { label: '48 hrs',  key: '48h', ms: 1000 * 60 * 60 * 48 },
   { label: '7 days',  key: '7d', ms: 1000 * 60 * 60 * 24 * 7 },
-  { label: '1 month', key: '1m', ms: 1000 * 60 * 60 * 24 * 30 }
+  { label: '1 month', key: '1m', ms: 1000 * 60 * 60 * 24 * 30 },
+  { label: '3 months',key: '3m', ms: 1000 * 60 * 60 * 24 * 90 },
+  { label: '6 months',key: '6m', ms: 1000 * 60 * 60 * 24 * 180 },
+  { label: '1 year', key: '1y', ms: 1000 * 60 * 60 * 24 * 365 },
+  { label: 'All',     key: 'all', ms: 1000 * 60 * 60 * 24 * 365 * 10 }
 ] as const;
 type RangeKey = typeof RANGE_OPTIONS[number]['key'];
 type Severity   = 'ALL' | 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
