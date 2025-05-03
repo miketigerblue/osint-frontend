@@ -1,0 +1,17 @@
+name = "osint-frontend-7v1"
+account_id = "4c00e2a00d7fb2ba760be4ffa161b142"
+project_name = "osint-frontend-7v1"
+compatibility_date = "2025-05-03"
+compatibility_flags = ["nodejs_compat"]
+
+
+pages_build_output_dir = "dist"
+
+
+functions = "functions"
+
+
+[[r2_buckets]]
+binding = "OSINT_BUCKET"
+bucket_name = "osint"
+
