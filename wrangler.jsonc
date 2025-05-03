@@ -1,18 +1,22 @@
+// wrangler.jsonc
 {
     "name": "osint-frontend",
+  
+    // <-- where Vite spits out your static build
     "pages_build_output_dir": "dist",
+  
+    // <-- pin your Workers runtime
     "compatibility_date": "2025-05-03",
     "compatibility_flags": ["nodejs_compat"],
-
+  
+    // <-- bind your private R2 bucket into your Functions
     "r2_buckets": [
       {
         "binding": "OSINT_BUCKET",
         "bucket_name": "osint"
       }
-    ],
- 
-    "functions": {
-      "directory": "functions"
-    }
+    ]
+  
+    // NO "functions" block here – Pages will look in ./functions by default
   }
   
