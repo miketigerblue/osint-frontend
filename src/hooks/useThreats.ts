@@ -6,15 +6,20 @@ export interface Threat {
   title: string;
   link: string;
   published: string;
-  content: string;
+  content: string | null;
   severity_level: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
   confidence_pct: number;
-  summary_impact: string;
   historical_context: string;
+  summary_impact: string;
   relevance: string;
   additional_notes: string;
   source_name: string;
   source_url: string;
+  feed_title: string;
+  feed_description: string;
+  feed_language: string;
+  feed_icon: string | null;
+  feed_updated: string | null;
   analysed_at: string;
   recommended_actions: string[];
   key_iocs: string[];
@@ -22,6 +27,12 @@ export interface Threat {
   mitigation_strategies: string[];
   potential_threat_actors: string[];
   cve_references: string[];
+  ttps: string[];
+  attack_vectors: string[];
+  tools_used: string[];
+  malware_families: string[];
+  target_geographies: string[];
+  exploit_references: string[];
 }
 
 /** Generic JSON fetcher for SWR */
@@ -39,7 +50,7 @@ const fetcher = async (url: string): Promise<Threat[]> => {
  * - Dedupes identical calls for 60 s
  */
 export function useThreats() {
-  const feedUrl = '/api/analysis';
+  const feedUrl = 'api/analysis';
 
   const { data, error, isValidating } = useSWR<Threat[]>(
     feedUrl,

@@ -15,8 +15,8 @@ export const onRequest: PagesFunction<Env> = async ({ env }) => {
   return new Response(obj.body, {
     headers: {
       'Content-Type': 'application/json',
-      // Cache at the edge for 5 minutes
-      'Cache-Control': 'public, max-age=300',
+      // Cache at the edge for 1 minutes
+      'Cache-Control': 'public, max-age=60',
     },
   })
 }
