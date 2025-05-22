@@ -56,7 +56,7 @@ export function useThreats() {
     feedUrl,
     fetcher,
     {
-      refreshInterval: 900_000,   // 15 minutes
+      refreshInterval: 300_000,   // 5 minutes
       revalidateOnFocus: true,    // refetch when tab regains focus
       dedupingInterval: 60_000    // no duplicate calls within 60 s
     }
