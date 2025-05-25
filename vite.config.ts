@@ -18,7 +18,7 @@ export default defineConfig({
     proxy: {
       // Forward both endpoints in dev to local worker:
       '/api/analysis': {
-        target: 'http://localhost:8787',
+        target: 'http://localhost:3001/enriched_archive_analysis_mv',
         changeOrigin: true,
         secure: false,
       }

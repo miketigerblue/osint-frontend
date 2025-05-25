@@ -1,8 +1,10 @@
-// src/hooks/useThreats.ts
 import useSWR from 'swr';
 
 export interface Threat {
-  guid: string;
+  archive_id: string;
+  analysis_id: string;
+  archive_guid: string;
+  analysis_guid: string;
   title: string;
   link: string;
   published: string;
@@ -15,12 +17,14 @@ export interface Threat {
   additional_notes: string;
   source_name: string;
   source_url: string;
-  feed_title: string;
-  feed_description: string;
-  feed_language: string;
-  feed_icon: string | null;
-  feed_updated: string | null;
+  analysis_feed_title: string;
+  analysis_feed_description: string;
+  analysis_feed_language: string;
+  analysis_feed_icon: string | null;
+  analysis_feed_updated: string | null;
   analysed_at: string;
+  enriched_at: string;
+  analysis_inserted_at: string;
   recommended_actions: string[];
   key_iocs: string[];
   affected_systems_sectors: string[];
@@ -35,7 +39,12 @@ export interface Threat {
   exploit_references: string[];
 }
 
-/** Generic JSON fetcher for SWR */
+// Use local API only in dev, otherwise default to production path
+const getApiUrl = () =>
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3001/enriched_archive_analysis_mv'
+    : '/api/analysis';
+
 const fetcher = async (url: string): Promise<Threat[]> => {
   const res = await fetch(url, { credentials: 'omit' });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -43,22 +52,19 @@ const fetcher = async (url: string): Promise<Threat[]> => {
 };
 
 /**
- * Hook returning the threats array.
- * - Hits `/api/analysis.json` in both dev & prod
- * - Refreshes every 15 minutes
- * - Re-fetches on window focus
- * - Dedupes identical calls for 60 s
+ * Custom React hook for fetching threat analyses.
+ * - Uses local backend in dev, Next.js API route in prod
  */
 export function useThreats() {
-  const feedUrl = 'api/analysis';
+  const feedUrl = getApiUrl();
 
   const { data, error, isValidating } = useSWR<Threat[]>(
     feedUrl,
     fetcher,
     {
       refreshInterval: 300_000,   // 5 minutes
-      revalidateOnFocus: true,    // refetch when tab regains focus
-      dedupingInterval: 60_000    // no duplicate calls within 60 s
+      revalidateOnFocus: true,
+      dedupingInterval: 60_000
     }
   );
 

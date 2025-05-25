@@ -10,7 +10,6 @@ interface ThreatCardProps {
 const ThreatCard: FC<ThreatCardProps> = ({ threat }) => {
   const sanitizedSummary = DOMPurify.sanitize(threat.summary_impact);
 
-  // Function to determine badge color based on severity level
   const getSeverityBadgeColor = (level: string) => {
     switch (level) {
       case 'CRITICAL':
@@ -69,7 +68,7 @@ const ThreatCard: FC<ThreatCardProps> = ({ threat }) => {
           </span>
         </div>
         <Link
-          to={`/threat/${encodeURIComponent(threat.guid)}`}
+          to={`/threats/${encodeURIComponent(threat.analysis_id)}`}
           className="text-blue-600 hover:underline text-sm"
         >
           Read more

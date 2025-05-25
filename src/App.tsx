@@ -11,7 +11,7 @@ export default function App() {
       <div className="p-4">
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/threat/:guid" element={<ThreatDetail />} />
+          <Route path="/threats/:analysis_id" element={<ThreatDetail />} />
         </Routes>
       </div>
     </div>

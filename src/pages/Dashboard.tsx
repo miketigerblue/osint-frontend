@@ -11,11 +11,8 @@ import {
   YAxis,
   Tooltip,
   Area,
-  BarChart,
-  Bar
 } from 'recharts';
 
-// Import the metrics functions to use in the component
 import {
   getSeverityDistribution,
   getTopThreatActors,
@@ -24,7 +21,6 @@ import {
   getUniqueIOCs,
   getRecentCritical,
 } from '../lib/metrics';
-
 
 /**
  * Each option describes a label, a key, and its duration in milliseconds.
@@ -42,13 +38,6 @@ const RANGE_OPTIONS = [
 type RangeKey = typeof RANGE_OPTIONS[number]['key'];
 type Severity   = 'ALL' | 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 
-/**
- * Dashboard page:
- * - Shows a row of date-range buttons
- * - Shows a severity filter (via FilterPanel)
- * - Renders an AreaChart of daily counts
- * - Lists a grid of ThreatCard components
- */
 const Dashboard: FC = () => {
   // 1. Fetch + loading/error state
   const { threats, isLoading, isError } = useThreats();
@@ -81,48 +70,14 @@ const Dashboard: FC = () => {
     [validThreats, cutoff, filter]
   );
 
-
-const severityDist = useMemo(
-  () => getSeverityDistribution(visibleThreats),
-  [visibleThreats]
-);
-
-const topActors = useMemo(
-  () => getTopThreatActors(visibleThreats),
-  [visibleThreats]
-);
-
-const topActions = useMemo(
-  () => getTopActions(visibleThreats),
-  [visibleThreats]
-);
-
-const dailyTimeline = useMemo(
-  () => getDailyTimeline(visibleThreats),
-  [visibleThreats]
-);
-
-const uniqueIOCs = useMemo(
-  () => getUniqueIOCs(visibleThreats),  
-  [visibleThreats]
-);
-
-const recentCritical = useMemo(
-  () => getRecentCritical(visibleThreats),
-  [visibleThreats]
-);
-
-
   // 6. Build trend data for the chart from *visibleThreats*
   const trendData = useMemo(() => {
     const counts: Record<string, Record<string, number>> = {};
-
     visibleThreats.forEach(t => {
       const [day] = t.published!.split('T');
       counts[day] = counts[day] || {};
       counts[day][t.severity_level] = (counts[day][t.severity_level] || 0) + 1;
     });
-
     return Object.entries(counts)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([day, sev]) => ({
@@ -140,7 +95,6 @@ const recentCritical = useMemo(
 
   return (
     <div className="p-6 space-y-8">
-     
 
       {/* Date-range buttons */}
       <div className="flex space-x-2">
@@ -166,7 +120,6 @@ const recentCritical = useMemo(
         <h2 className="font-semibold mb-2">
           Threats by Severity ({range})
         </h2>
-
         {trendData.length > 0 ? (
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={trendData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
@@ -180,7 +133,7 @@ const recentCritical = useMemo(
             </AreaChart>
           </ResponsiveContainer>
         ) : (
-          <p className="text-centre text-gray-500">
+          <p className="text-center text-gray-500">
             No data in this window.
           </p>
         )}
@@ -189,12 +142,11 @@ const recentCritical = useMemo(
       {/* Severity filter panel */}
       <FilterPanel onFilter={setFilter} />
 
-     
-
       {/* Grid of threat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Now using analysis_id as unique key and identifier */}
         {visibleThreats.map(threat => (
-          <ThreatCard key={threat.guid} threat={threat} />
+          <ThreatCard key={threat.analysis_id} threat={threat} />
         ))}
       </div>
     </div>

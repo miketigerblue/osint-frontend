@@ -4,7 +4,8 @@ import { useThreats, type Threat } from '../hooks/useThreats';
 import SeverityBadge from '../components/SeverityBadge';
 import DOMPurify from 'dompurify';
 
-type Params = { guid: string };
+// Update Params type for analysis_id
+type Params = { analysis_id: string };
 
 // Reusable component for rendering list sections
 const ListSection: FC<{ title: string; items: string[] }> = ({ title, items }) => {
@@ -20,7 +21,8 @@ const ListSection: FC<{ title: string; items: string[] }> = ({ title, items }) =
 };
 
 const ThreatDetail: FC = () => {
-  const { guid } = useParams<Params>();
+  // Get analysis_id from route params
+  const { analysis_id } = useParams<Params>();
   const { threats, isLoading, isError } = useThreats();
 
   if (isLoading) {
@@ -30,8 +32,9 @@ const ThreatDetail: FC = () => {
     return <p className="p-6 text-red-600">Unable to load threats.</p>;
   }
 
-  const decoded = decodeURIComponent(guid || '');
-  const threat = threats.find((t: Threat) => t.guid === decoded);
+  const decoded = decodeURIComponent(analysis_id || '');
+  // Find by analysis_id instead of guid
+  const threat = threats.find((t: Threat) => t.analysis_id === decoded);
 
   if (!threat) {
     return (
@@ -158,30 +161,97 @@ const ThreatDetail: FC = () => {
         <dl className="space-y-2 text-gray-700">
           <div className="flex">
             <dt className="w-40 font-medium">Feed Title:</dt>
-            <dd>{threat.feed_title}</dd>
+            <dd>{threat.analysis_feed_title}</dd>
           </div>
           <div className="flex">
             <dt className="w-40 font-medium">Feed Description:</dt>
-            <dd>{threat.feed_description}</dd>
+            <dd>{threat.analysis_feed_description}</dd>
           </div>
           <div className="flex">
             <dt className="w-40 font-medium">Feed Language:</dt>
-            <dd>{threat.feed_language}</dd>
+            <dd>{threat.analysis_feed_language}</dd>
           </div>
-          {threat.feed_icon && (
+          {threat.analysis_feed_icon && (
             <div className="flex">
               <dt className="w-40 font-medium">Feed Icon:</dt>
-              <dd><img src={threat.feed_icon} alt="Feed Icon" className="h-6 w-6" /></dd>
+              <dd><img src={threat.analysis_feed_icon} alt="Feed Icon" className="h-6 w-6" /></dd>
             </div>
           )}
-          {threat.feed_updated && (
+          {threat.analysis_feed_updated && (
             <div className="flex">
               <dt className="w-40 font-medium">Feed Updated:</dt>
-              <dd>{new Date(threat.feed_updated).toLocaleString('en-GB')}</dd>
+              <dd>{new Date(threat.analysis_feed_updated).toLocaleString('en-GB')}</dd>
             </div>
           )}
         </dl>
       </section>
+      {/* Provenance & Extracted Metadata */}
+<section className="mt-8 bg-gray-50 p-6 rounded-lg border border-gray-200">
+  <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3A9 9 0 11 3 12a9 9 0 0118 0z" />
+    </svg>
+    Provenance &amp; Extracted Metadata
+  </h2>
+  <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-gray-700">
+    <div>
+      <dt className="font-medium">Archive ID:</dt>
+      <dd className="break-all text-gray-600">{threat.archive_id}</dd>
+    </div>
+    <div>
+      <dt className="font-medium">Analysis ID:</dt>
+      <dd className="break-all text-gray-600">{threat.analysis_id}</dd>
+    </div>
+    <div>
+      <dt className="font-medium">Archive GUID:</dt>
+      <dd className="break-all text-gray-600">{threat.archive_guid}</dd>
+    </div>
+    <div>
+      <dt className="font-medium">Analysis GUID:</dt>
+      <dd className="break-all text-gray-600">{threat.analysis_guid}</dd>
+    </div>
+    <div>
+      <dt className="font-medium">Source Name:</dt>
+      <dd>{threat.source_name}</dd>
+    </div>
+    <div>
+      <dt className="font-medium">Source URL:</dt>
+      <dd>
+        <a
+          href={threat.source_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline break-all"
+        >
+          {threat.source_url}
+        </a>
+      </dd>
+    </div>
+    <div>
+      <dt className="font-medium">Original Article:</dt>
+      <dd>
+        <a
+          href={threat.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline break-all"
+        >
+          {threat.link}
+        </a>
+      </dd>
+    </div>
+    <div>
+      <dt className="font-medium">Enriched At:</dt>
+      <dd>{new Date(threat.enriched_at).toLocaleString('en-GB')}</dd>
+    </div>
+    <div>
+      <dt className="font-medium">Analysis Inserted At:</dt>
+      <dd>{new Date(threat.analysis_inserted_at).toLocaleString('en-GB')}</dd>
+    </div>
+  </dl>
+</section>
+
+
     </div>
   );
 };
