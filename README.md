@@ -1,3 +1,10 @@
+
+<img src="screenshots/frontend.png" alt="frontend" width="300"/>
+<img src="screenshots/responsive-design.png" alt="frontend" width="300"/>
+<img src="screenshots/enrichment.png" alt="frontend" width="300"/>
+<img src="screenshots/provenance.png" alt="frontend" width="300"/>
+
+
 # OSINT Threat Dashboard
 
 A React + Vite-based frontend for visualising and filtering OSINT threat data. This dashboard consumes structured threat intelligence from a companion [Rust Feed Ingestor][rust-feed] service and provides interactive charts, severity filters, and detailed threat views.
@@ -141,5 +148,5 @@ MIT © Mike Harris
 
 ---
 
-[rust-feed]: https://github.com/miketigerblue/rust-feed-ingestor
-[osint-enricher]: https://github.com/miketigerblue/osint-enricher
+[ingestor]: https://github.com/miketigerblue/rust-feed-ingestor
+[enricher]: https://github.com/miketigerblue/osint-enricher

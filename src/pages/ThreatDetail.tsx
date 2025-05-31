@@ -80,12 +80,6 @@ const ThreatDetail: FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
-      {threat.content && (
-        <section className="text-gray-800 whitespace-pre-line">
-          <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
-        </section>
-      )}
 
       {/* Impact & Context */}
       {threat.summary_impact && (
