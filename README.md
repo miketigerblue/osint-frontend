@@ -1,9 +1,12 @@
 
+<table>
+<tr><td>
 <img src="screenshots/frontend.png" alt="frontend" width="300"/>
 <img src="screenshots/responsive-design.png" alt="frontend" width="300"/>
 <img src="screenshots/enrichment.png" alt="frontend" width="300"/>
 <img src="screenshots/provenance.png" alt="frontend" width="300"/>
-
+</td></tr>
+</table>
 
 # OSINT Threat Dashboard
 
@@ -58,22 +61,37 @@ npm install
 
 Or using Yarn:
 
-```bash
+```
 yarn install
 ```
 
-### 3. Configure the API proxy
+### 3. Configure the API proxy to work for local dev and Cloudflare worker 
 
-By default, Vite proxies requests from `/mv_threat_frontend` to `http://localhost:3001`. You can adjust this in `vite.config.ts`:
+By default, Vite proxies requests from `/enriched_archive_analysis_mv` to `http://localhost:3001`. You can adjust this in `vite.config.ts`:
 
-```ts
+```
 export default defineConfig({
+  plugins: [
+    react({
+      include: ['**/*.jsx', '**/*.tsx']
+    })
+  ],
+  resolve: {
+    alias: { '@': '/src' },
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
+  },
   server: {
+    port: 3005,
     proxy: {
-      '/mv_threat_frontend': 'http://localhost:3001'
-    }
-  }
-});
+      // Forward both endpoints in dev to local worker:
+      '/api/analysis': {
+        target: 'http://localhost:3001/enriched_archive_analysis_mv',
+        changeOrigin: true,
+        secure: false,
+      }
+    },
+  },
+})
 ```
 
 ### 4. Run in development mode
